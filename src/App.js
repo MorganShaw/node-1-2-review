@@ -1,26 +1,51 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import axios from "axios";
 
-function App() {
-  return (
+class App extends React.Component() {
+  constructor() {
+    super();
+
+    this.state = {
+      pokemon: [],
+      name: "",
+      type: "",
+      inputField: ""
+    }
+  }
+
+  componentDidMount() {
+    axios
+    .get('/api/pokemon')
+    .then((res) => {
+      //res.data will be the data send from teh controller function inside send()
+      this.setState({ pokemon: res.data});
+    }).catch((err)) => {
+      console.log(err, "get request failed");
+    }
+  }
+
+  handleChange = (event) => {
+    this.setState({[event.target.name]: event.target.value})
+  }
+
+  addPokemon = () => {
+    const {name, type, nickname} = this.state;
+    axios.post("/api/pokemon", )
+  }
+  render (){
+    return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div>
+        <input name="name" placeholder="name" onChange={this.handleChange}/>
+        <input name="type" placeholder="type" onChange={this.handleChange}/>
+        <input name="nickname" placeholder="nickname" onChange={this.handleChange}/>
+      </div>
     </div>
-  );
+    );
+  }
+  
 }
 
 export default App;
